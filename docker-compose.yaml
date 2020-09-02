@@ -1,0 +1,16 @@
+version: '3'
+services:
+  dns.service:
+    restart: always
+    container_name: sftp
+    privileged: true
+    image: "sftp:latest"
+    build: .
+    volumes:
+      - ~/go/src/sftp:/go/src/sftp:ro
+      - /data/users:/data/users
+      - /data/public:/data/public
+      - ~/data/cache:/data/users_cache
+    ports:
+      - "24:22"
+      - "5000:8081"

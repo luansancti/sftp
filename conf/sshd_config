@@ -113,7 +113,7 @@ AcceptEnv LANG LC_*
 
 # override default of no subsystems
 
-Subsystem	sftp	internal-sftp
+Subsystem	sftp	internal-sftp -d %h
 Match group sftpgroup
 ChrootDirectory %h
 X11Forwarding no

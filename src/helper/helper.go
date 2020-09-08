@@ -56,16 +56,17 @@ func CheckUserExists(username string) bool {
 
 }
 
-func Execute(command string) {
+func Execute(command string) bool {
 	cmd := exec.Command("bash", "-c", command)
 
 	stdout, err := cmd.Output()
 
 	if err != nil {
 		fmt.Println("error", command, err.Error())
-		return
+		return false
 	}
 
 	fmt.Println(string(stdout))
 	fmt.Printf("%s", string(command))
+	return true
 }

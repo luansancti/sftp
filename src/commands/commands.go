@@ -208,7 +208,7 @@ func CreateUserKey(person user.User) models.DefaultResponse {
 
 		_, err = os.Create(fileAuthorized)
 
-		if !helper.Execute(fmt.Sprint("ssh-keygen -b 4096 -N", " ", `""`, " ", "-t rsa -f", " ", pathSshId)) {
+		if !helper.Execute(fmt.Sprint("ssh-keygen -b 2048 -N", " ", `""`, " ", "-t rsa -f", " ", pathSshId, " ", "<<<y")) {
 			return models.ResponseDefault(fmt.Sprint("Error to create user: ", person.User), false)
 		}
 

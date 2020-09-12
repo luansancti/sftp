@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"user"
 
-	"helper"
 	//"strings"
 	"commands"
 	//"os"
@@ -23,11 +22,14 @@ func AddUser(rw http.ResponseWriter, req *http.Request) {
 		panic(err)
 	}
 
-	if helper.CheckUserExists(person.User) {
-
-	} else {
-
+	js, err := json.Marshal(commands.CreateUser(person))
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		return
 	}
+
+	rw.Header().Set("Content-Type", "application/json")
+	rw.Write(js)
 }
 
 func AddUserWithKey(rw http.ResponseWriter, req *http.Request) {
@@ -40,7 +42,7 @@ func AddUserWithKey(rw http.ResponseWriter, req *http.Request) {
 		panic(err)
 	}
 
-	js, err := json.Marshal(commands.CreateUser(person))
+	js, err := json.Marshal(commands.CreateUserKey(person))
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 		return
@@ -93,5 +95,13 @@ func FixPermission(rw http.ResponseWriter, req *http.Request) {
 }
 
 func ListUsers(rw http.ResponseWriter, req *http.Request) {
-	commands.ListUsers()
+
+	js, err := json.Marshal(commands.ListUsers())
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	rw.Header().Set("Content-Type", "application/json")
+	rw.Write(js)
 }

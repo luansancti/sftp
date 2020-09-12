@@ -7,10 +7,10 @@ services:
     image: "sftp:latest"
     build: .
     volumes:
-      - ~/go/src/sftp:/go/src/sftp:ro
-      - /data/users:/data/users
-      - /data/public:/data/public
-      - ~/data/cache:/data/users_cache
+      - ${HOME}/Documents/git/sftp:/go/src/sftp
+      - ${HOME}/Documents/git/sftp/data/users:/data/users
+      - ${HOME}/Documents/git/sftp/data/public:/data/public
+      - ${HOME}/Documents/git/sftp/data/cache:/data/users_cache
     ports:
       - "24:22"
       - "5000:8081"

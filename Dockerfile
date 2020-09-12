@@ -14,5 +14,7 @@ RUN useradd --shell /bin/false --home-dir /data admin
 RUN usermod -a -G sftpgroup admin
 ENV NOTVISIBLE "in users profile"
 RUN echo "export VISIBLE=now" >> /etc/profile
+ENV TZ=America/Sao_Paulo
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 EXPOSE 22
 ENTRYPOINT ["bash", "/app/docker-entrypoint.sh"]

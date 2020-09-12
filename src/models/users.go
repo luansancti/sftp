@@ -7,7 +7,7 @@ type UserDetails struct {
 	Owner      string
 	Key        bool
 	Expiration time.Time
-	Size       float64
+	Size       int64
 }
 
 type ListUserDetails struct {

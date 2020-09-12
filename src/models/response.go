@@ -12,7 +12,7 @@ type FixPermission struct {
 type ListUser struct {
 	Success bool
 	Message string
-	Data    ListUserDetails
+	Data    []UserDetails
 }
 
 type DeleteUser struct {
@@ -43,4 +43,12 @@ func ResponsePermission(message string, success bool) FixPermission {
 	reponsePermission.Message = message
 	reponsePermission.Success = success
 	return reponsePermission
+}
+
+func ResponseListUsers(message string, success bool, data []UserDetails) ListUser {
+	ResponseListUsers := ListUser{}
+	ResponseListUsers.Message = message
+	ResponseListUsers.Success = success
+	ResponseListUsers.Data = data
+	return ResponseListUsers
 }

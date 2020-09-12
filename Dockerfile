@@ -1,5 +1,5 @@
 FROM golang
-RUN apt update && apt install ssh openssh-server -y
+RUN apt update && apt install ssh openssh-server rsyslog -y
 ENV GOPATH=/go/src/sftp
 WORKDIR app
 USER root
@@ -17,4 +17,5 @@ RUN echo "export VISIBLE=now" >> /etc/profile
 ENV TZ=America/Sao_Paulo
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 EXPOSE 22
+WORKDIR /go/src/sftp
 ENTRYPOINT ["bash", "/app/docker-entrypoint.sh"]

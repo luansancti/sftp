@@ -8,6 +8,7 @@ import (
 	models "models"
 	"os"
 	"path"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"syscall"
@@ -80,13 +81,14 @@ func FixPermission(person user.User) models.DefaultResponse {
 func DeleteUser(person user.User) models.DefaultResponse {
 
 	person = user.NewUser(person.User, "", 0)
-	if !helper.Execute(fmt.Sprint("pkill -u", " ", person.User)) {
+	if !helper.Execute(fmt.Sprint("pkill -u", " ", person.User, " ", "||", " ", "true")) {
 		return models.ResponseDefault(fmt.Sprint("Error to delete user: ", person.User), false)
 	}
 	if !helper.Execute(fmt.Sprint("userdel -f", " ", person.User)) {
 		return models.ResponseDefault(fmt.Sprint("Error to delete user: ", person.User), false)
 	}
 	if err := syscall.Unmount(person.PathUserPublic, 0); err != nil {
+		fmt.Println(err)
 		return models.ResponseDefault(fmt.Sprint("Error to delete user: ", person.User), false)
 	}
 	os.RemoveAll(person.PathUser)
@@ -115,30 +117,47 @@ func ListUsers() models.ListUser {
 			username := strings.Split(line, ":")[0]
 			expired, _ := strconv.ParseInt(strings.Split(line, ":")[7], 10, 64)
 			person := user.NewUser(username, "", 0)
-			userUp, err := os.Stat(person.PathUserUp)
-			if err != nil {
-				models.ResponseListUsers(fmt.Sprint("List update"), false, []models.UserDetails{})
-			}
+			userUp, _ := DirSize(person.PathUserUp)
 
 			userDetails.UserName = username
 			userDetails.Expiration = time.Unix((expired * 86400), 0)
 
-			userSsh, err := os.Stat(path.Join(person.PathUser, ".ssh"))
+			userSsh, err := DirSize(path.Join(person.PathUser, ".ssh"))
 			if err != nil {
 
 				userDetails.Key = false
-				userDetails.Size = userUp.Size()
+				userDetails.Size = userSsh
 				fmt.Println(userDetails.Expiration)
 
 			} else {
 				userDetails.Key = true
-				userDetails.Size = userUp.Size() + userSsh.Size()
+				userDetails.Size = userUp + userSsh
+
 			}
 			listUserDeta = append(listUserDeta, userDetails)
 		}
 
 	}
+	fmt.Println(listUserDeta)
 	return models.ResponseListUsers(fmt.Sprint("List update"), true, listUserDeta)
+}
+
+func ListDirectory(paths string) bool {
+	return true
+}
+
+func DirSize(path string) (int64, error) {
+	var size int64
+	err := filepath.Walk(path, func(_ string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if !info.IsDir() {
+			size += info.Size()
+		}
+		return err
+	})
+	return size, err
 }
 
 func CreateUserKey(person user.User) models.DefaultResponse {
@@ -189,7 +208,7 @@ func CreateUserKey(person user.User) models.DefaultResponse {
 
 		_, err = os.Create(fileAuthorized)
 
-		if !helper.Execute(fmt.Sprint("ssh-keygen -b 4096 -N ", " ", `""`, " ", "-t rsa -f", " ", pathSshId)) {
+		if !helper.Execute(fmt.Sprint("ssh-keygen -b 4096 -N", " ", `""`, " ", "-t rsa -f", " ", pathSshId)) {
 			return models.ResponseDefault(fmt.Sprint("Error to create user: ", person.User), false)
 		}
 
@@ -224,7 +243,7 @@ func AddCacheuser(person user.User) {
 	data, err := ioutil.ReadFile("/etc/shadow")
 
 	if err != nil {
-		log.Fatalf("File reading error", err)
+		fmt.Println("File reading error", err)
 	}
 
 	indexString := strings.Index(string(data), person.User)
@@ -236,13 +255,13 @@ func AddCacheuser(person user.User) {
 		os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
 	}
 
 	defer f.Close()
 
 	if _, err := f.WriteString(shadowArray + "\n"); err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
 	}
 }
 
@@ -252,7 +271,7 @@ func RemoveCacheUser(person user.User) {
 
 	input, err := ioutil.ReadFile(cacheLocale)
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
 	}
 
 	lines := strings.Split(string(input), "\n")
@@ -268,6 +287,6 @@ func RemoveCacheUser(person user.User) {
 	output := strings.Join(s, "\n")
 	err = ioutil.WriteFile(cacheLocale, []byte(output), 0644)
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
 	}
 }

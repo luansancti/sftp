@@ -86,7 +86,7 @@ UsePAM yes
 #AllowAgentForwarding yes
 #AllowTcpForwarding yes
 #GatewayPorts no
-X11Forwarding yes
+#X11Forwarding yes
 #X11DisplayOffset 10
 #X11UseLocalhost yes
 #PermitTTY yes
@@ -113,7 +113,7 @@ AcceptEnv LANG LC_*
 
 # override default of no subsystems
 
-Subsystem	sftp	internal-sftp -d %h
+Subsystem	sftp	internal-sftp
 Match group sftpgroup
 ChrootDirectory %h
 X11Forwarding no

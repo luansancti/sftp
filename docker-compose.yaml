@@ -7,10 +7,10 @@ services:
     image: "sftp:latest"
     build: .
     volumes:
-      - ${HOME}/Documents/git/sftp:/go/src/sftp
-      - ${HOME}/Documents/git/sftp/data/users:/data/users
-      - ${HOME}/Documents/git/sftp/data/public:/data/public
-      - ${HOME}/Documents/git/sftp/data/cache:/data/users_cache
+      - /c/Users/SUPRASUMO/Documents/git/sftp:/go/src/sftp
+      - /c/data/users:/data/users
+      - /c/data/public:/data/public
+      - /c/data/cache:/data/users_cache
     ports:
       - "24:22"
       - "5000:8081"

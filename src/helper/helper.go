@@ -66,3 +66,37 @@ func Execute(command string) bool {
 
 	return true
 }
+
+func DiskUsage(currentPath string, info os.FileInfo) int64 {
+	size := info.Size()
+
+	if !info.IsDir() {
+		return size
+	}
+
+	dir, err := os.Open(currentPath)
+
+	if err != nil {
+		fmt.Println(err)
+		return size
+	}
+	defer dir.Close()
+
+	files, err := dir.Readdir(-1)
+
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	for _, file := range files {
+		if file.Name() == "." || file.Name() == ".." {
+			continue
+		}
+		size += DiskUsage(currentPath+"/"+file.Name(), file)
+	}
+
+	fmt.Printf("Size in bytes : [%d] : [%s]\n", size, currentPath)
+
+	return size
+}

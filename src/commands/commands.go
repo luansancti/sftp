@@ -104,11 +104,8 @@ func ListUsers() models.ListUser {
 	}
 
 	indexString := strings.Index(string(data), "admin")
-
 	dataRune := []rune(string(data))
-
 	shadowArray := strings.Split(string(dataRune[indexString:len(string(data))]), "\n")
-
 	listUserDeta := []models.UserDetails{}
 
 	for _, line := range shadowArray[1:] {
@@ -117,26 +114,30 @@ func ListUsers() models.ListUser {
 			username := strings.Split(line, ":")[0]
 			expired, _ := strconv.ParseInt(strings.Split(line, ":")[7], 10, 64)
 			person := user.NewUser(username, "", 0)
-			userUp, _ := DirSize(person.PathUserUp)
+			//userUp, _ := DirSize(person.PathUserUp)
+
+			infoUp, err := os.Lstat(person.PathUserUp)
+
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
 
 			userDetails.UserName = username
 			userDetails.Expiration = time.Unix((expired * 86400), 0)
 
-			userSsh, err := DirSize(path.Join(person.PathUser, ".ssh"))
+			infoSsh, err := os.Lstat(path.Join(person.PathUser, ".ssh"))
 			if err != nil {
-
 				userDetails.Key = false
-				userDetails.Size = userSsh
-				fmt.Println(userDetails.Expiration)
+				userDetails.Size = helper.DiskUsage(person.PathUserUp, infoUp)
 
 			} else {
-				userDetails.Key = true
-				userDetails.Size = userUp + userSsh
 
+				userDetails.Key = true
+				userDetails.Size = helper.DiskUsage(person.PathUserUp, infoUp) + helper.DiskUsage(path.Join(person.PathUser, ".ssh"), infoSsh)
 			}
 			listUserDeta = append(listUserDeta, userDetails)
 		}
-
 	}
 	fmt.Println(listUserDeta)
 	return models.ResponseListUsers(fmt.Sprint("List update"), true, listUserDeta)

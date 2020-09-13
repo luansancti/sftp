@@ -9,6 +9,10 @@ COPY ["./conf/sshd_config", "/etc/ssh/sshd_config"]
 COPY ["./conf/docker-entrypoint.sh", "/app/docker-entrypoint.sh"]
 RUN groupadd -f sftpgroup
 RUN mkdir -p /data/users
+RUN mkdir -p /data/public
+RUN chmod 755 /data/users
+RUN chown -R admin:admin /data/public
+RUN chmod -R 775 /data/public
 RUN chmod 755 /data/users
 RUN useradd --shell /bin/false --home-dir /data admin
 RUN usermod -a -G sftpgroup admin

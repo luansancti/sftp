@@ -114,8 +114,6 @@ func ListUsers() models.ListUser {
 			username := strings.Split(line, ":")[0]
 			expired, _ := strconv.ParseInt(strings.Split(line, ":")[7], 10, 64)
 			person := user.NewUser(username, "", 0)
-			//userUp, _ := DirSize(person.PathUserUp)
-
 			infoUp, err := os.Lstat(person.PathUserUp)
 
 			if err != nil {
@@ -129,12 +127,12 @@ func ListUsers() models.ListUser {
 			infoSsh, err := os.Lstat(path.Join(person.PathUser, ".ssh"))
 			if err != nil {
 				userDetails.Key = false
-				userDetails.Size = helper.DiskUsage(person.PathUserUp, infoUp)
+				userDetails.Size = helper.SizedDisk(person.PathUserUp, infoUp)
 
 			} else {
 
 				userDetails.Key = true
-				userDetails.Size = helper.DiskUsage(person.PathUserUp, infoUp) + helper.DiskUsage(path.Join(person.PathUser, ".ssh"), infoSsh)
+				userDetails.Size = helper.SizedDisk(person.PathUserUp, infoUp) + helper.SizedDisk(path.Join(person.PathUser, ".ssh"), infoSsh)
 			}
 			listUserDeta = append(listUserDeta, userDetails)
 		}

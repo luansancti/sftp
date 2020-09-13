@@ -181,7 +181,7 @@ func CreateUserKey(person user.User) models.DefaultResponse {
 				return models.ResponseDefault(fmt.Sprint("Error to create user: ", person.User), false)
 			}
 		} else {
-			if !helper.Execute(fmt.Sprint("useradd --groups sftpgroup --shell=/bin/false -d", " ", person.PathUser, " ", person.User, " ", "-e ", time.Now().Local().AddDate(0, 0, 7).Format("2006-01-02"))) {
+			if !helper.Execute(fmt.Sprint("useradd --groups sftpgroup --shell=/bin/false -d", " ", person.PathUser, " ", person.User, " ", "-e ", time.Now().Local().AddDate(0, 0, person.Expiration).Format("2006-01-02"))) {
 				return models.ResponseDefault(fmt.Sprint("Error to create user: ", person.User), false)
 			}
 		}

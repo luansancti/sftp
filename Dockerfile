@@ -8,14 +8,14 @@ RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so
 COPY ["./conf/sshd_config", "/etc/ssh/sshd_config"]
 COPY ["./conf/docker-entrypoint.sh", "/app/docker-entrypoint.sh"]
 RUN groupadd -f sftpgroup
+RUN useradd --shell /bin/false --home-dir /data admin
+RUN usermod -a -G sftpgroup admin
 RUN mkdir -p /data/users
 RUN mkdir -p /data/public
 RUN chmod 755 /data/users
 RUN chown -R admin:admin /data/public
 RUN chmod -R 775 /data/public
 RUN chmod 755 /data/users
-RUN useradd --shell /bin/false --home-dir /data admin
-RUN usermod -a -G sftpgroup admin
 ENV NOTVISIBLE "in users profile"
 RUN echo "export VISIBLE=now" >> /etc/profile
 ENV TZ=America/Sao_Paulo

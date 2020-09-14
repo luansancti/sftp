@@ -19,11 +19,6 @@ services:
       - type: bind
         source: /c/data/cache
         target: /data/users_cache   
-    # volumes:
-    #   - /c/Users/SUPRASUMO/Documents/git/sftp:/go/src/sftp
-    #   - /c/data/users:/data/users
-    #   - /c/data/public:/data/public
-    #   - /c/data/cache:/data/users_cache
     ports:
       - "24:22"
       - "5000:8081"

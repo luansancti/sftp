@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"os/exec"
 	"path"
@@ -108,14 +109,15 @@ func SizedDisk(currentPath string, info os.FileInfo) int64 {
 	return size
 }
 
-func DiskUsage(path string) (disk DiskStatus) {
+func DiskUsage(path string) uint64 {
+	disk := DiskStatus{}
 	fs := syscall.Statfs_t{}
 	err := syscall.Statfs(path, &fs)
 	if err != nil {
-		return
+		log.Fatal()
 	}
 	disk.All = fs.Blocks * uint64(fs.Bsize)
 	disk.Free = fs.Bfree * uint64(fs.Bsize)
 	disk.Used = disk.All - disk.Free
-	return
+	return ((disk.Used / disk.All) * 100)
 }

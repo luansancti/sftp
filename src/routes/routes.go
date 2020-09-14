@@ -13,6 +13,7 @@ func LoadRoutes() *mux.Router {
 	myRouter.HandleFunc("/deleteuser", controllers.DeleteUser).Methods("POST")
 	myRouter.HandleFunc("/createuserwithkey", controllers.AddUserWithKey).Methods("POST")
 	myRouter.HandleFunc("/listusers", controllers.ListUsers).Methods("GET")
+	myRouter.HandleFunc("/percentagedisk", controllers.DiskPercentage).Methods("GET")
 
 	return myRouter
 }

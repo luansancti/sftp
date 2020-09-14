@@ -94,6 +94,19 @@ func FixPermission(rw http.ResponseWriter, req *http.Request) {
 
 }
 
+func DiskPercentage(rw http.ResponseWriter, req *http.Request) {
+	// js, err := json.Marshal(commands.DiskPercent())
+	// if err != nil {
+	// 	http.Error(rw, err.Error(), http.StatusInternalServerError)
+	// 	return
+	// }
+
+	// rw.Header().Set("Content-Type", "application/json")
+	// rw.Write(js)
+	commands.DiskPercent()
+
+}
+
 func ListUsers(rw http.ResponseWriter, req *http.Request) {
 
 	js, err := json.Marshal(commands.ListUsers())

@@ -148,6 +148,7 @@ func ListDirectory(paths string) bool {
 func DiskPercent() {
 	configPath := helper.GetConfigPaths()
 	fmt.Println(helper.DiskUsage(configPath.UsersPath))
+	fmt.Println(helper.DiskUsage(configPath.PublicPath))
 }
 
 func DirSize(path string) (int64, error) {

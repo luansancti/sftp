@@ -8,17 +8,17 @@ services:
     build: .
     volumes:
       - type: bind
-        source: /c/Users/SUPRASUMO/Documents/git/sftp 
+        source: ~/git/sftp
         target: /go/src/sftp
       - type: bind
-        source: /c/data/users
+        source: /data/users
         target: /data/users
       - type: bind
-        source: /c/data/public
+        source: /media/Data
         target: /data/public
       - type: bind
-        source: /c/data/cache
-        target: /data/users_cache   
+        source: /data/cache
+        target: /data/users_cache
     ports:
       - "24:22"
       - "5000:8081"

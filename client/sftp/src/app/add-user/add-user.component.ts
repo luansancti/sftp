@@ -42,6 +42,9 @@ export class AddUserComponent implements OnInit {
     ])
   });
 
+  
+
+
   constructor(
     private clipboard: Clipboard, 
     private _snackBar: MatSnackBar, 
@@ -89,7 +92,7 @@ export class AddUserComponent implements OnInit {
         if(x.Success) {
           this._snackBar.open(x.Message, 'End now', {
             duration: 2000,
-            horizontalPosition: "right",
+            horizontalPosition: "center",
             verticalPosition: "top",
           });
           this.cleanForm()
@@ -97,7 +100,7 @@ export class AddUserComponent implements OnInit {
         }
         this._snackBar.open(x.Message, 'End now', {
           duration: 2000,
-          horizontalPosition: "right",
+          horizontalPosition: "center",
           verticalPosition: "top",
         });
       })
@@ -110,7 +113,9 @@ export class AddUserComponent implements OnInit {
   cleanForm() {
     
     this.myForm.reset()
-    
+    Object.keys(this.myForm.controls).forEach(key =>{
+      this.myForm.controls[key].setErrors(null)
+   });
   }
 
   onStrengthChanged(strength: number) {

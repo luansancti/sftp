@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import {GatewayService} from '../../helper/gateway.service'
-import {ResponseUserList} from '../../models/user'
+import {ResponseUserList, ResponseGeneric, UserAdd} from '../../models/user'
 
 
 
@@ -14,5 +14,13 @@ export class HomeService {
 
   public GetListUser(): Observable<ResponseUserList> {
     return this.gateway.GET("listusers")
+  }
+
+  public Fix(content: any): Observable<ResponseGeneric> {
+    return this.gateway.POST("fixpermissionuser",content)
+  }
+
+  public DeleteUser(content: UserAdd): Observable<ResponseGeneric> {
+    return this.gateway.POST("deleteuser",content)
   }
 }

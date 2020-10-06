@@ -15,15 +15,23 @@ import { UserAdd } from '../models/user';
   styleUrls: ['./add-user.component.scss']
 })
 
-export class AddUserComponent implements OnInit {
+export class AddUserComponent {
   @Output() notifyParent: EventEmitter<any> = new EventEmitter();
 
-  panelOpenState = false
-  showDetails: boolean = false
-  hide = true
-  strength: number
-  checked = false
-  password;
+  
+  constructor(
+    private clipboard: Clipboard, 
+    private _snackBar: MatSnackBar, 
+    private _addUserService: AddUserService,
+  ) { }
+
+  panelOpenState: boolean = false;
+  showDetails: boolean = false;
+  hide: boolean = true;
+  strength: number;
+  checked: boolean = false;
+  showP: boolean = false;
+  expirationDate: string;
 
 
   myForm = new FormGroup({
@@ -41,15 +49,18 @@ export class AddUserComponent implements OnInit {
       
     ])
   });
-
   
-
-
-  constructor(
-    private clipboard: Clipboard, 
-    private _snackBar: MatSnackBar, 
-    private _addUserService: AddUserService,
-    ) { }
+  enablePass() {
+    let key = this.myForm.get('key').value
+    console.log(key)
+    if( key == 'true') {
+      return this.myForm.get('password').disable()
+    } 
+    
+    this.myForm.get('password').enable()
+    
+    
+  }
 
   onSubmit() {
 
@@ -66,28 +77,9 @@ export class AddUserComponent implements OnInit {
     _addUser.User = username
     _addUser.Password = password
     _addUser.Expiration = Number(expiration)
-    if (!key) {
+    if (key == 'false') {
       this._addUserService
       .AddUser(_addUser)
-      .subscribe(x => {
-        if(x.Success) {
-          this._snackBar.open(x.Message, 'End now', {
-            duration: 2000,
-            horizontalPosition: "right",
-            verticalPosition: "top",
-          });
-          this.cleanForm()
-          return this.notifyParent.emit(true)
-        }
-        this._snackBar.open(x.Message, 'End now', {
-          duration: 2000,
-          horizontalPosition: "right",
-          verticalPosition: "top",
-        });  
-      })
-    } else {
-      this._addUserService
-      .AddUserWithKey(_addUser)
       .subscribe(x => {
         if(x.Success) {
           this._snackBar.open(x.Message, 'End now', {
@@ -102,20 +94,55 @@ export class AddUserComponent implements OnInit {
           duration: 2000,
           horizontalPosition: "center",
           verticalPosition: "top",
+        });  
+      })
+    } else {
+      this._addUserService
+      .AddUserWithKey(_addUser)
+      .subscribe(x => {
+        if(x.Success) {
+          this._snackBar.open(x.Message, 'OK', {
+            duration: 2000,
+            horizontalPosition: "center",
+            verticalPosition: "top",
+          });
+          this.cleanForm()
+          return this.notifyParent.emit(true)
+        }
+        this._snackBar.open(x.Message, 'OK', {
+          duration: 2000,
+          horizontalPosition: "center",
+          verticalPosition: "top",
         });
       })
     }
   }
 
-  ngOnInit(): void {
-  }
-
   cleanForm() {
-    
+    this.showP = false
     this.myForm.reset()
     Object.keys(this.myForm.controls).forEach(key =>{
       this.myForm.controls[key].setErrors(null)
    });
+  }
+
+  getWhenExpired(days) {
+    if (days == -1) {
+      return this.expirationDate = "Never"
+    }
+    this.showP = true
+    var today = new Date();
+    var tomorrow = new Date();
+    tomorrow.setDate(today.getDate()+Number(days));
+    tomorrow.setHours(0,0,0)
+    this.expirationDate = tomorrow.toString()
+  }
+
+  doSomething() {
+    let expirationValue = this.myForm.get('expiration').value
+    if(expirationValue != '') {
+      this.getWhenExpired(expirationValue)
+    }
   }
 
   onStrengthChanged(strength: number) {
@@ -137,7 +164,7 @@ export class AddUserComponent implements OnInit {
     var lower = "abcdefghijklmnopqrstuvwxyz";
     var upper = addUpper ? lower.toUpperCase() : "";
     var nums = addNums ? "0123456789" : "";
-    var symbols = addSymbols ? "!#$%&\'()*+,-.:;<=>?@[\\]^_`{|}~" : "";
+    var symbols = addSymbols ? "!#$%&()*+,-.:;<=>?@_" : "";
 
     var all = lower + upper + nums + symbols;
     while (true) {

@@ -2,11 +2,14 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import {HomeService} from './service/home.service'
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
-import {UserDetails} from '../models/user'
+import {UserAdd, UserDetails} from '../models/user'
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import {Helper} from '../helper/helper'
 import * as moment from 'moment';
 import {MatSort} from '@angular/material/sort';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import { ConfirmationDialogService } from '../confirmation-dialog/confirmation-dialog-service.service';
+
 
 
 @Component({
@@ -23,9 +26,9 @@ import {MatSort} from '@angular/material/sort';
 })
 
 
-export class HomeComponent implements OnInit, AfterViewInit {
+export class HomeComponent implements AfterViewInit {
 
-  constructor(private homeService: HomeService, public helper: Helper) { }
+  constructor(private homeService: HomeService, public helper: Helper, private _snackBar: MatSnackBar,private confirmationDialogService: ConfirmationDialogService) { }
  
   displayedColumns: string[] = ['UserName', 'Expiration', 'Owner', 'Size'];
   dataSource: MatTableDataSource<UserDetails>
@@ -36,19 +39,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
 
   isExpansionDetailRow = (i: number, row: Object) => row.hasOwnProperty('detailRow'); 
-  
-  ngOnInit(): void {
-    
-  }
-
 
   public formatHour(dateSent){
     if (dateSent == "Never") {
       return dateSent
     }
-    var d1 = moment(Date.now());
-    var d2 = moment(dateSent);
-    console.log(dateSent)
+    var d1 = moment(new Date(Date.now()).toUTCString());
+    var d2 = moment(new Date(dateSent * 1000).toUTCString());
     var days = moment.duration(d2.diff(d1)).asDays();
     days = Math.floor(days)
     if(days < 0) {
@@ -77,8 +74,38 @@ export class HomeComponent implements OnInit, AfterViewInit {
     })
   }
 
-  getNotification(evt) {
-    // Do something with the notification (evt) sent by the child!
+
+  deleteUser(element: UserDetails) {
+    this.confirmationDialogService.confirm('Please confirm..', `Do you really want delete user ${element.UserName}?`)
+    .then((confirmed) => {
+      let useradd = new UserAdd()
+    useradd.User = element.UserName
+    this.homeService
+    .DeleteUser(useradd)
+    .subscribe(x => {
+      if(x.Success) {
+        this._snackBar.open(x.Message, 'OK', {
+          duration: 2000,
+          horizontalPosition: "center",
+          verticalPosition: "top",
+        });
+        this.getNotification()
+      } else {
+        this._snackBar.open(x.Message, 'OK', {
+          duration: 2000,
+          horizontalPosition: "center",
+          verticalPosition: "top",
+        });
+      }
+    })
+    })
+    
+  }
+
+
+  
+
+  getNotification() {
     this.homeService.GetListUser()
     .subscribe(x => {
       if(x.Success) {
@@ -94,8 +121,4 @@ export class HomeComponent implements OnInit, AfterViewInit {
       this.dataSource.sort = this.sort;
     })
   }
-
-  
-
-
 }

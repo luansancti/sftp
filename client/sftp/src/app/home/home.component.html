@@ -5,7 +5,7 @@
             <app-disk-percentage></app-disk-percentage>
         </div>
         <div class="add-user col-md-6">
-            <app-add-user (notifyParent)="getNotification($event)"></app-add-user>
+            <app-add-user (notifyParent)="getNotification()"></app-add-user>
         </div>
     </div>
 </div>
@@ -53,7 +53,7 @@
                                     key</a>
                                 <a href="#" class="list-group-item list-group-item-action"
                                     *ngIf="element.Expiration != 'Never'">Renew user</a>
-                                <a href="#" class="list-group-item list-group-item-action danger">Delete user</a>
+                                <a href="#" (click)="deleteUser(element)"class="list-group-item list-group-item-action danger">Delete user</a>
                                 <a href="#" class="list-group-item list-group-item-action">Open directory</a>
                                 <br>
                             </div>

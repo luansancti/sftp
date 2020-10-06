@@ -27,7 +27,9 @@ import {ClipboardModule} from '@angular/cdk/clipboard';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {AddUserService} from './add-user/add-user.service'
-
+import {MatDialogModule} from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
+import { ConfirmationDialogService } from './confirmation-dialog/confirmation-dialog-service.service';
 
 
 
@@ -36,7 +38,8 @@ import {AddUserService} from './add-user/add-user.service'
     AppComponent,
     HomeComponent,
     DiskPercentageComponent,
-    AddUserComponent
+    AddUserComponent,
+    ConfirmationDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -61,9 +64,11 @@ import {AddUserService} from './add-user/add-user.service'
     ReactiveFormsModule,
     ClipboardModule,
     MatTooltipModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatDialogModule
   ],
-  providers: [AddUserService],
-  bootstrap: [AppComponent]
+  providers: [AddUserService, ConfirmationDialogService],
+  bootstrap: [AppComponent],
+  entryComponents: [MatDialogModule]
 })
 export class AppModule { }

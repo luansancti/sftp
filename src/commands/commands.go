@@ -36,12 +36,12 @@ func CreateUser(person user.User) models.DefaultResponse {
 			log.Fatalln(err)
 			return models.ResponseDefault(string(err.Error()), false)
 		}
-		if person.Expiration == -1 {
+		if person.Expiration <= 0 {
 			if !helper.Execute(fmt.Sprint("useradd --groups sftpgroup --shell=/bin/false -d", " ", person.PathUser, " ", person.User)) {
 				return models.ResponseDefault(fmt.Sprint("Error to create user: ", person.User), false)
 			}
 		} else {
-			if !helper.Execute(fmt.Sprint("useradd --groups sftpgroup --shell=/bin/false -d", " ", person.PathUser, " ", person.User, " ", "-e ", time.Now().Local().AddDate(0, 0, 7).Format("2006-01-02"))) {
+			if !helper.Execute(fmt.Sprint("useradd --groups sftpgroup --shell=/bin/false -d", " ", person.PathUser, " ", person.User, " ", "-e ", time.Now().Local().AddDate(0, 0, person.Expiration).Format("2006-01-02"))) {
 				return models.ResponseDefault(fmt.Sprint("Error to create user: ", person.User), false)
 			}
 		}
@@ -122,7 +122,12 @@ func ListUsers() models.ListUser {
 			}
 
 			userDetails.UserName = username
-			userDetails.Expiration = time.Unix((expired * 86400), 0)
+
+			if userDetails.Expiration = "Never"; expired == 0 {
+
+			} else {
+				userDetails.Expiration = fmt.Sprint(expired * 86400)
+			}
 
 			infoSsh, err := os.Lstat(path.Join(person.PathUser, ".ssh"))
 			if err != nil {
@@ -145,10 +150,23 @@ func ListDirectory(paths string) bool {
 	return true
 }
 
-func DiskPercent() {
+func DiskPercent() models.DirectoryPerc {
 	configPath := helper.GetConfigPaths()
-	fmt.Println(helper.DiskUsage(configPath.UsersPath))
-	fmt.Println(helper.DiskUsage(configPath.PublicPath))
+	listPercentageUsage := []models.PercentageUsed{}
+
+	percentageUsers := models.PercentageUsed{}
+	percentagePublic := models.PercentageUsed{}
+
+	percentageUsers.DirectoryName = configPath.UsersPath
+	percentageUsers.Percentage = helper.DiskUsage(configPath.UsersPath)
+
+	percentagePublic.DirectoryName = configPath.PublicPath
+	percentagePublic.Percentage = helper.DiskUsage(configPath.PublicPath)
+
+	listPercentageUsage = append(listPercentageUsage, percentageUsers, percentagePublic)
+
+	return models.ResponseDirectoryPerc("", true, listPercentageUsage)
+
 }
 
 func DirSize(path string) (int64, error) {
@@ -181,7 +199,7 @@ func CreateUserKey(person user.User) models.DefaultResponse {
 			return models.ResponseDefault(fmt.Sprint("Error to create user: ", person.User), false)
 		}
 
-		if person.Expiration == -1 {
+		if person.Expiration <= 0 {
 			if !helper.Execute(fmt.Sprint("useradd --groups sftpgroup --shell=/bin/false -d", " ", person.PathUser, " ", person.User)) {
 				return models.ResponseDefault(fmt.Sprint("Error to create user: ", person.User), false)
 			}

@@ -15,6 +15,12 @@ type ListUser struct {
 	Data    []UserDetails
 }
 
+type DirectoryPerc struct {
+	Success bool
+	Message string
+	Data    []PercentageUsed
+}
+
 type DeleteUser struct {
 	CreateUser
 }
@@ -47,6 +53,14 @@ func ResponsePermission(message string, success bool) FixPermission {
 
 func ResponseListUsers(message string, success bool, data []UserDetails) ListUser {
 	ResponseListUsers := ListUser{}
+	ResponseListUsers.Message = message
+	ResponseListUsers.Success = success
+	ResponseListUsers.Data = data
+	return ResponseListUsers
+}
+
+func ResponseDirectoryPerc(message string, success bool, data []PercentageUsed) DirectoryPerc {
+	ResponseListUsers := DirectoryPerc{}
 	ResponseListUsers.Message = message
 	ResponseListUsers.Success = success
 	ResponseListUsers.Data = data

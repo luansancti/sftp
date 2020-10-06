@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"os/exec"
 	"path"
 	"strings"
 	"syscall"
+	"time"
 )
 
 type Config struct {
@@ -109,15 +109,20 @@ func SizedDisk(currentPath string, info os.FileInfo) int64 {
 	return size
 }
 
-func DiskUsage(path string) uint64 {
+func DiskUsage(path string) float64 {
 	disk := DiskStatus{}
 	fs := syscall.Statfs_t{}
 	err := syscall.Statfs(path, &fs)
 	if err != nil {
-		log.Fatal()
+		return -1.0
 	}
 	disk.All = fs.Blocks * uint64(fs.Bsize)
 	disk.Free = fs.Bfree * uint64(fs.Bsize)
 	disk.Used = disk.All - disk.Free
-	return ((disk.Used / disk.All) * 100)
+	return (float64(disk.Used) / float64(disk.All)) * float64(100)
+}
+
+func DiffDate(t1 time.Time) int {
+	t2 := time.Now()
+	return int(t2.Sub(t1).Hours() / 24)
 }

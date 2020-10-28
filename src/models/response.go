@@ -25,9 +25,37 @@ type DeleteUser struct {
 	CreateUser
 }
 
+type KeyResponse struct {
+	Success bool
+	Message string
+	Data    string
+}
+
+type ResponseData struct {
+	Success bool
+	Message string
+	Data    []string
+}
+
 type DefaultResponse struct {
 	Success bool
 	Message string
+}
+
+func DataResponse(success bool, message string, data []string) ResponseData {
+	response := ResponseData{}
+	response.Message = message
+	response.Success = success
+	response.Data = data
+	return response
+}
+
+func ResponseKey(success bool, message string, data string) KeyResponse {
+	response := KeyResponse{}
+	response.Message = message
+	response.Success = success
+	response.Data = data
+	return response
 }
 
 func ResponseDefault(message string, success bool) DefaultResponse {

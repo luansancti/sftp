@@ -13,9 +13,9 @@ services:
       - type: bind
         source: /data/users
         target: /data/users
-      - type: bind
-        source: /media/Data
-        target: /data/public
+        #- type: bind
+        #source: /media/Data
+        #target: /data/public
       - type: bind
         source: /data/cache
         target: /data/users_cache

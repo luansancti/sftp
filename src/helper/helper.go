@@ -75,6 +75,27 @@ func Execute(command string) bool {
 	return true
 }
 
+func Delete_Empty(s []string) []string {
+	var r []string
+	for _, str := range s {
+		if str != "" {
+			r = append(r, str)
+		}
+	}
+	return r
+}
+
+func ExecuteReturn(command string) string {
+	output, err := exec.Command("bash", "-c", command).Output()
+
+	if err != nil {
+		fmt.Println("error", command, err.Error())
+		return ""
+	}
+
+	return string(output)
+}
+
 func SizedDisk(currentPath string, info os.FileInfo) int64 {
 	size := info.Size()
 

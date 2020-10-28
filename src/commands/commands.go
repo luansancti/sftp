@@ -78,6 +78,40 @@ func FixPermission(person user.User) models.DefaultResponse {
 
 }
 
+func GetUsersLogged() models.ResponseData {
+
+	outputCommand := helper.ExecuteReturn("ps -ef | grep '[s]shd' | grep -v ^root | awk '{print$9}' | grep 'sftp' | sed 's/@internal-sftp//g'")
+
+	//outputCommand := helper.ExecuteReturn("netstat -tnpa | grep 'ESTABLISHED.*sshd' | awk '{print $8}'")
+	fmt.Println(string(outputCommand))
+	return models.DataResponse(true, "", helper.Delete_Empty(strings.Split(outputCommand, "\n")))
+}
+
+func Unlink_User(person user.User) models.DefaultResponse {
+	person = user.NewUser(person.User, "", 0)
+	if !helper.Execute(fmt.Sprint("pkill -u", " ", person.User, " ", "||", " ", "true")) {
+		return models.ResponseDefault(fmt.Sprint("Error to unlink user: ", person.User), false)
+	}
+	return models.ResponseDefault(fmt.Sprint("User unlinked: ", person.User), true)
+}
+
+func ChangeExpiration(person user.User) models.DefaultResponse {
+
+	if !helper.Execute(fmt.Sprint("chage", " ", "-E", time.Now().Local().AddDate(0, 0, person.Expiration).Format("2006-01-02"), " ", person.User)) {
+		return models.ResponseDefault(fmt.Sprint("Error to change expiration: ", person.User), false)
+	}
+
+	return models.ResponseDefault(fmt.Sprint("Expiration changed: ", person.User), true)
+}
+
+func ChangePassword(person user.User) models.DefaultResponse {
+
+	if !helper.Execute(fmt.Sprint("echo -e", " ", `"`, person.Password, `\n`, person.Password, `"`, " ", "|", " ", "passwd", " ", person.User)) {
+		return models.ResponseDefault(fmt.Sprint("Error change password user: ", person.User), false)
+	}
+	return models.ResponseDefault(fmt.Sprint("Changed Password: ", person.User), true)
+}
+
 func DeleteUser(person user.User) models.DefaultResponse {
 
 	person = user.NewUser(person.User, "", 0)
@@ -94,6 +128,14 @@ func DeleteUser(person user.User) models.DefaultResponse {
 	os.RemoveAll(person.PathUser)
 	RemoveCacheUser(person)
 	return models.ResponseDefault(fmt.Sprint("User removed: ", person.User), true)
+}
+
+func ReturnPathKey(person user.User) models.KeyResponse {
+	person = user.NewUser(person.User, "", 0)
+	pathSsh := path.Join(person.PathUser, ".ssh", "id_rsa")
+	data, _ := ioutil.ReadFile(pathSsh)
+	return models.ResponseKey(true, "Get Key", string(data))
+
 }
 
 func ListUsers() models.ListUser {

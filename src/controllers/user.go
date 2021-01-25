@@ -47,6 +47,7 @@ func UsersLogged(rw http.ResponseWriter, req *http.Request) {
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 	rw.Header().Set("Content-Type", "application/json")
+	rw.WriteHeader(200)
 	rw.Write(js)
 }
 
@@ -147,6 +148,7 @@ func DownloadKey(rw http.ResponseWriter, req *http.Request) {
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 	rw.Header().Set("Content-Type", "application/json")
+	rw.WriteHeader(200)
 	rw.Write(js)
 	//return path
 }
@@ -170,6 +172,7 @@ func AddUserWithKey(rw http.ResponseWriter, req *http.Request) {
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 	rw.Header().Set("Content-Type", "application/json")
+	rw.WriteHeader(200)
 	rw.Write(js)
 
 }
@@ -192,6 +195,7 @@ func DeleteUser(rw http.ResponseWriter, req *http.Request) {
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 	rw.Header().Set("Content-Type", "application/json")
+	rw.WriteHeader(200)
 	rw.Write(js)
 
 }
@@ -215,6 +219,7 @@ func FixPermission(rw http.ResponseWriter, req *http.Request) {
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 	rw.Header().Set("Content-Type", "application/json")
+	rw.WriteHeader(200)
 	rw.Write(js)
 
 }
@@ -230,6 +235,7 @@ func DiskPercentage(rw http.ResponseWriter, req *http.Request) {
 	rw.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 
 	rw.Header().Set("Content-Type", "application/json")
+	rw.WriteHeader(200)
 	rw.Write(js)
 
 }
@@ -246,5 +252,6 @@ func ListUsers(rw http.ResponseWriter, req *http.Request) {
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 	rw.Header().Set("Content-Type", "application/json")
+	rw.WriteHeader(200)
 	rw.Write(js)
 }

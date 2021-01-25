@@ -4,6 +4,8 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {AddUserService} from './add-user.service';
 import { UserAdd } from '../models/user';
+import {Helper} from '../helper/helper';
+import * as moment from 'moment';
 
 
 @Injectable({
@@ -23,6 +25,7 @@ export class AddUserComponent {
     private clipboard: Clipboard, 
     private _snackBar: MatSnackBar, 
     private _addUserService: AddUserService,
+    private helper: Helper
   ) { }
 
   panelOpenState: boolean = false;
@@ -69,9 +72,16 @@ export class AddUserComponent {
     let key = this.myForm.get('key').value
     let expiration = this.myForm.get('expiration').value
 
-    if(username == '' || password == '' || key == '' || expiration == '') {
-      return 
+    if(key == 'true') {
+      if(username == '' || key == '' || expiration == '') {
+        return 
+      }
+    } else {
+      if(username == '' || key == '' || expiration == '' || password == '') {
+        return 
+      }
     }
+    
     let _addUser = new UserAdd()
 
     _addUser.User = username
@@ -135,7 +145,7 @@ export class AddUserComponent {
     var tomorrow = new Date();
     tomorrow.setDate(today.getDate()+Number(days));
     tomorrow.setHours(0,0,0)
-    this.expirationDate = tomorrow.toString()
+    this.expirationDate = moment(tomorrow.toString()).format('YYYY/MM/DD HH:mm')
   }
 
   doSomething() {
@@ -151,7 +161,7 @@ export class AddUserComponent {
 
 
   randomPassword() {
-    let password = this.generatePassword(12, true, true, true)
+    let password = this.helper.generatePassword(12, true, true, true)
     this.myForm.controls['password'].setValue(password)
     this.clipboard.copy(password)
   }
@@ -159,30 +169,6 @@ export class AddUserComponent {
   counter(i: number) {
     return new Array(i);
   }
-
-  generatePassword(length, addUpper, addSymbols, addNums) {
-    var lower = "abcdefghijklmnopqrstuvwxyz";
-    var upper = addUpper ? lower.toUpperCase() : "";
-    var nums = addNums ? "0123456789" : "";
-    var symbols = addSymbols ? "!#$%&()*+,-.:;<=>?@_" : "";
-
-    var all = lower + upper + nums + symbols;
-    while (true) {
-        var pass = "";
-        for (var i=0; i<length; i++) {
-            pass += all[Math.random() * all.length | 0];
-        }
-
-        // criteria:
-        if (!/[a-z]/.test(pass)) continue; // lowercase is a must
-        if (addUpper && !/[A-Z]/.test(pass)) continue; // check uppercase
-        if (addSymbols && !/\W/.test(pass)) continue; // check symbols
-        if (addNums && !/\d/.test(pass)) continue; // check nums
-
-        return pass; // all good
-    }
-  }
-
 
 
 }

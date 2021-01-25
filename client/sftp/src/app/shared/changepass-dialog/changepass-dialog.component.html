@@ -1,0 +1,37 @@
+<div class="modal-header">
+    <h4 class="modal-title">{{ title }}</h4>
+      <button type="button" class="close" aria-label="Close" (click)="dismiss()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <form [formGroup]="myForm">
+                <mat-form-field appearance="outline" style="width: 100%">
+                <mat-label>Password</mat-label>
+                <mat-pass-toggle-visibility #toggle matSuffix></mat-pass-toggle-visibility>
+                <input matInput #password [type]="toggle.type" [attr.disabled]="true" required placeholder="Password" formControlName="password">
+                </mat-form-field>
+                <mat-password-strength #passwordComponent (onStrengthChanged)="onStrengthChanged($event)"
+                [password]="password.value">
+                </mat-password-strength>
+                <mat-password-strength-info *ngIf="strength != 100" [passwordComponent]="passwordComponent">
+                </mat-password-strength-info>
+            </form>
+          </div>
+          <button mat-raised-button 
+                      matTooltip="Click and random password is copied to your clipboard"
+                      [matTooltipShowDelay]="100"
+                      [matTooltipHideDelay]="500"
+                      style="width: 100%;" 
+                      (click)="randomPassword()"
+                      type="button"
+                      color="primary"
+                      aria-label="Button that displays a tooltip with a customized delay in showing and hiding">
+                Random Password
+            </button>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger" (click)="decline()">{{ btnCancelText }}</button>
+      <button type="button" class="btn btn-success" (click)="accept()">{{ btnOkText }}</button>
+</div>

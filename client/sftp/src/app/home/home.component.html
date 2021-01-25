@@ -2,7 +2,7 @@
 <div class="container-header container-md">
     <div class="row justify-content-center">
         <div class="dashboard col-md-6">
-            <app-disk-percentage></app-disk-percentage>
+            <app-dashboard></app-dashboard>
         </div>
         <div class="add-user col-md-6">
             <app-add-user (notifyParent)="getNotification()"></app-add-user>
@@ -25,11 +25,7 @@
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Expiration </th>
                     <td mat-cell *matCellDef="let element"> {{element.Expiration}}</td>
                 </ng-container>
-    
-                <ng-container matColumnDef="Owner">
-                    <th mat-header-cell *matHeaderCellDef> Owner </th>
-                    <td mat-cell *matCellDef="let element"> {{element.Owner}} </td>
-                </ng-container>
+
     
     
                 <ng-container matColumnDef="Size">
@@ -46,13 +42,13 @@
                                     style="background-color: black; border-color: black;">
                                     Actions
                                 </a>
-                                <a href="#" class="list-group-item list-group-item-action">Fix</a>
-                                <a href="#" class="list-group-item list-group-item-action" *ngIf="!element.Key">Change
+                                <a href="#" class="list-group-item list-group-item-action" (click)="fixPermission(element)">Fix</a>
+                                <a href="#" (click)="changePassword(element)" class="list-group-item list-group-item-action" *ngIf="!element.Key">Change
                                     password</a>
-                                <a href="#" class="list-group-item list-group-item-action" *ngIf="element.Key">Download
+                                <a href="#" class="list-group-item list-group-item-action" (click)="downloadKey(element)" *ngIf="element.Key">Download
                                     key</a>
                                 <a href="#" class="list-group-item list-group-item-action"
-                                    *ngIf="element.Expiration != 'Never'">Renew user</a>
+                                    *ngIf="element.Expiration != 'Never'" (click)="renewUser(element)">Renew user</a>
                                 <a href="#" (click)="deleteUser(element)"class="list-group-item list-group-item-action danger">Delete user</a>
                                 <a href="#" class="list-group-item list-group-item-action">Open directory</a>
                                 <br>

@@ -3,12 +3,29 @@
                             (closed)="panelOpenState = false">
         <mat-expansion-panel-header>
         <mat-panel-title>
-            Dashboard
+            Disk Usage
         </mat-panel-title>
         <mat-panel-description>
-            Click to open painel
+            
         </mat-panel-description>
         </mat-expansion-panel-header>
-        <p>I'm visible because I am open</p>
+        <div class="container">
+           
+            <div class="row" >
+                <div class="col-lg" *ngFor="let x of data">
+                    <div>
+                        <mat-progress-spinner
+                            class="example-margin"
+                            [color]="color"
+                            [mode]="mode"
+                            [value]="x.Percentage"
+                            aria-label="Rating">
+                        </mat-progress-spinner>
+                        <div style="position:relative; top: -60px; left: 30px;">{{x.DirectoryName.split('/')[2] | uppercase}}<br>{{x.Percentage | number:'1.0-0'}}%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
     </mat-expansion-panel>
 </mat-accordion>        

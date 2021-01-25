@@ -188,7 +188,33 @@ func ListUsers() models.ListUser {
 	return models.ResponseListUsers(fmt.Sprint("List update"), true, listUserDeta)
 }
 
-func ListDirectory(paths string) bool {
+func ListDirectory(pathName string) bool {
+
+	folder := models.DirectoryInfo{}
+
+	files, err := filepath.Glob(pathName)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, s := range files {
+		fi, err := os.Stat(s)
+		if err != nil {
+			fmt.Println(err)
+			return false
+		}
+		switch mode := fi.Mode(); {
+		case mode.IsDir():
+			folder.IsDirectory = true
+		case mode.IsRegular():
+			folder.IsDirectory = false
+		}
+		stat, _ := os.Lstat(s)
+		folder.Size = helper.SizedDisk(pathName, stat)
+		folder.Name = pathName
+		fmt.Println(folder)
+	}
+
 	return true
 }
 

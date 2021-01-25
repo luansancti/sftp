@@ -18,11 +18,11 @@ export class Helper {
         return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
     }
 
-    public randomPass (length, addUpper, addSymbols, addNums) {
+    public generatePassword(length, addUpper, addSymbols, addNums) {
         var lower = "abcdefghijklmnopqrstuvwxyz";
         var upper = addUpper ? lower.toUpperCase() : "";
         var nums = addNums ? "0123456789" : "";
-        var symbols = addSymbols ? "!#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~" : "";
+        var symbols = addSymbols ? "!#$%&()*+,-.:;<=>?@_" : "";
     
         var all = lower + upper + nums + symbols;
         while (true) {

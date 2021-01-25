@@ -8,7 +8,9 @@ import {Helper} from '../helper/helper'
 import * as moment from 'moment';
 import {MatSort} from '@angular/material/sort';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import { ConfirmationDialogService } from '../confirmation-dialog/confirmation-dialog-service.service';
+import { ConfirmationDialogService } from '../shared/confirmation-dialog/confirmation-dialog-service.service';
+import { RenewDialogService } from '../shared/renew-dialog/renew-dialog.service';
+import {ChangepassDialogService} from '../shared/changepass-dialog/changepass-dialog.service'
 
 
 
@@ -28,9 +30,15 @@ import { ConfirmationDialogService } from '../confirmation-dialog/confirmation-d
 
 export class HomeComponent implements AfterViewInit {
 
-  constructor(private homeService: HomeService, public helper: Helper, private _snackBar: MatSnackBar,private confirmationDialogService: ConfirmationDialogService) { }
+  constructor(private homeService: HomeService, 
+    public helper: Helper, 
+    private _snackBar: MatSnackBar,
+    private confirmationDialogService: ConfirmationDialogService,
+    private renewDialog: RenewDialogService,
+    private changeDialog: ChangepassDialogService
+    ) { }
  
-  displayedColumns: string[] = ['UserName', 'Expiration', 'Owner', 'Size'];
+  displayedColumns: string[] = ['UserName', 'Expiration', 'Size'];
   dataSource: MatTableDataSource<UserDetails>
   panelOpenState = false;
   hide = true;
@@ -39,6 +47,14 @@ export class HomeComponent implements AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
 
   isExpansionDetailRow = (i: number, row: Object) => row.hasOwnProperty('detailRow'); 
+  
+  writeContents(content, fileName, contentType) {
+    var a = document.createElement('a');
+    var file = new Blob([content], {type: contentType});
+    a.href = URL.createObjectURL(file);
+    a.download = fileName;
+    a.click();
+  }
 
   public formatHour(dateSent){
     if (dateSent == "Never") {
@@ -58,6 +74,10 @@ export class HomeComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.loadUsers()
+  }
+
+  loadUsers() {
     this.homeService.GetListUser()
     .subscribe(x => {
       if(x.Success) {
@@ -74,14 +94,78 @@ export class HomeComponent implements AfterViewInit {
     })
   }
 
+  changePassword(element: UserDetails) {
+    this.changeDialog.confirm('Change Password','')
+    .then(x => {
 
-  deleteUser(element: UserDetails) {
-    this.confirmationDialogService.confirm('Please confirm..', `Do you really want delete user ${element.UserName}?`)
-    .then((confirmed) => {
-      let useradd = new UserAdd()
-    useradd.User = element.UserName
-    this.homeService
-    .DeleteUser(useradd)
+      if(x) {
+        let useradd = new UserAdd()
+        useradd.User = element.UserName
+        useradd.Password = x.toString()
+        this.homeService.ChangePassword(useradd)
+        .subscribe(content => {
+          this._snackBar.open(content.Message, 'OK', {
+            duration: 2000,
+            horizontalPosition: "center",
+            verticalPosition: "top",
+          });
+        })
+      }
+    })
+  }
+
+  renewUser(element: UserDetails) {
+    this.renewDialog.confirm('Renew User', 'Select in days do you want renew')
+    .then(x => {
+      console.log(x)
+      if(x) {
+        console.log("cai aqui")
+        let useradd = new UserAdd()
+        useradd.User = element.UserName
+        useradd.Expiration = Number(x.toString())
+        this.homeService.ChangeExpiration(useradd)
+        .subscribe(x => {
+          if(x.Success) {
+            this._snackBar.open(x.Message, 'OK', {
+              duration: 2000,
+              horizontalPosition: "center",
+              verticalPosition: "top",
+            });
+            this.loadUsers()
+          } else {
+            this._snackBar.open(x.Message, 'OK', {
+              duration: 2000,
+              horizontalPosition: "center",
+              verticalPosition: "top",
+            });
+          }
+        })
+      }
+    })
+  }
+
+  downloadKey(element: UserDetails) {
+    let userAdd = new UserAdd()
+    userAdd.User = element.UserName
+    this.homeService.DownlaodKey(userAdd).subscribe(content => {
+      if(content.Success) {
+
+        this.downloadFile(content.Data, `${element.UserName}.rsa`, 'text/plain')
+        this._snackBar.open(content.Message, 'OK', {
+          duration: 2000,
+          horizontalPosition: "center",
+          verticalPosition: "top",
+        });
+      }
+      
+    })
+  }
+
+
+  fixPermission(element: UserDetails) {
+    let userAdd = new UserAdd()
+    userAdd.User = element.UserName
+    this.homeService.Fix(userAdd)
     .subscribe(x => {
       if(x.Success) {
         this._snackBar.open(x.Message, 'OK', {
@@ -89,7 +173,6 @@ export class HomeComponent implements AfterViewInit {
           horizontalPosition: "center",
           verticalPosition: "top",
         });
-        this.getNotification()
       } else {
         this._snackBar.open(x.Message, 'OK', {
           duration: 2000,
@@ -98,6 +181,43 @@ export class HomeComponent implements AfterViewInit {
         });
       }
     })
+
+  }
+
+  downloadFile(content: any, fileName: string, contentType) {
+    var a = document.createElement('a');
+    var file = new Blob([content], {type: contentType});
+    a.href = URL.createObjectURL(file);
+    a.download = fileName;
+    a.click();
+  }
+
+  deleteUser(element: UserDetails) {
+    this.confirmationDialogService.confirm('Please confirm..', `Do you really want delete user ${element.UserName}?`)
+    .then((confirmed) => {
+      if(confirmed) {
+        let useradd = new UserAdd()
+      useradd.User = element.UserName
+      this.homeService
+      .DeleteUser(useradd)
+      .subscribe(x => {
+        if(x.Success) {
+          this._snackBar.open(x.Message, 'OK', {
+            duration: 2000,
+            horizontalPosition: "center",
+            verticalPosition: "top",
+          });
+          this.getNotification()
+        } else {
+          this._snackBar.open(x.Message, 'OK', {
+            duration: 2000,
+            horizontalPosition: "center",
+            verticalPosition: "top",
+          });
+        }
+      })
+      }
+      
     })
     
   }

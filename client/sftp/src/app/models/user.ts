@@ -17,8 +17,19 @@ export class ResponseDiskPercentage {
     Data: DiskUsage[];
 }
 
+export class ResponseKey {
+    Success: boolean;
+    Message: string;
+    Data: string;
+}
 
-class DiskUsage {
+export class ResponseData {
+    Success: string;
+    Data: string[];
+}
+
+
+export class DiskUsage {
     DirectoryName: string;
     Percentage: number;
 }

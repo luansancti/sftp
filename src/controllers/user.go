@@ -236,6 +236,7 @@ func DiskPercentage(rw http.ResponseWriter, req *http.Request) {
 
 func ListUsers(rw http.ResponseWriter, req *http.Request) {
 
+	commands.ListDirectory("/data/users/bey")
 	js, err := json.Marshal(commands.ListUsers())
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)

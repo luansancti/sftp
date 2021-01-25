@@ -28,8 +28,13 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {AddUserService} from './add-user/add-user.service'
 import {MatDialogModule} from '@angular/material/dialog';
-import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
-import { ConfirmationDialogService } from './confirmation-dialog/confirmation-dialog-service.service';
+import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confirmation-dialog.component';
+import { ConfirmationDialogService } from './shared/confirmation-dialog/confirmation-dialog-service.service';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { ChangepassDialogComponent } from './shared/changepass-dialog/changepass-dialog.component';
+import { RenewDialogComponent } from './shared/renew-dialog/renew-dialog.component';
+import { RenewDialogService } from './shared/renew-dialog/renew-dialog.service';
 
 
 
@@ -39,7 +44,10 @@ import { ConfirmationDialogService } from './confirmation-dialog/confirmation-di
     HomeComponent,
     DiskPercentageComponent,
     AddUserComponent,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    DashboardComponent,
+    RenewDialogComponent,
+    ChangepassDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -65,9 +73,10 @@ import { ConfirmationDialogService } from './confirmation-dialog/confirmation-di
     ClipboardModule,
     MatTooltipModule,
     MatSnackBarModule,
-    MatDialogModule
+    MatDialogModule,
+    MatProgressSpinnerModule
   ],
-  providers: [AddUserService, ConfirmationDialogService],
+  providers: [AddUserService, ConfirmationDialogService, RenewDialogService],
   bootstrap: [AppComponent],
   entryComponents: [MatDialogModule]
 })

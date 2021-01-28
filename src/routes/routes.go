@@ -3,10 +3,11 @@ package routes
 import (
 	"controllers"
 
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
 
-func LoadRoutes() *mux.Router {
+func LoadRoutes() *handlers.CORS {
 	myRouter := mux.NewRouter().StrictSlash(true)
 	myRouter.HandleFunc("/createuser", controllers.AddUser).Methods("POST")
 	myRouter.HandleFunc("/fixpermissionuser", controllers.FixPermission).Methods("POST")
@@ -19,6 +20,5 @@ func LoadRoutes() *mux.Router {
 	myRouter.HandleFunc("/unlink_user", controllers.Unlink_User).Methods("POST")
 	myRouter.HandleFunc("/changepassword", controllers.ChangePassword).Methods("POST")
 	myRouter.HandleFunc("/changeexpiration", controllers.ChangeExpiration).Methods("POST")
-
-	return myRouter
+	return handlers.CORS(handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}), handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS"}), handlers.AllowedOrigins([]string{"*"}))(myRouter)
 }

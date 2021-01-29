@@ -1,13 +1,14 @@
 package routes
 
 import (
+	"net/http"
 	"controllers"
-
+	"os"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
 
-func LoadRoutes() *handlers.CORS {
+func LoadRoutes() *mux.Router {
 	myRouter := mux.NewRouter().StrictSlash(true)
 	myRouter.HandleFunc("/createuser", controllers.AddUser).Methods("POST")
 	myRouter.HandleFunc("/fixpermissionuser", controllers.FixPermission).Methods("POST")
@@ -20,5 +21,15 @@ func LoadRoutes() *handlers.CORS {
 	myRouter.HandleFunc("/unlink_user", controllers.Unlink_User).Methods("POST")
 	myRouter.HandleFunc("/changepassword", controllers.ChangePassword).Methods("POST")
 	myRouter.HandleFunc("/changeexpiration", controllers.ChangeExpiration).Methods("POST")
-	return handlers.CORS(handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}), handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS"}), handlers.AllowedOrigins([]string{"*"}))(myRouter)
+	return myRouter
+
+
+}
+
+func SetRequest() http.Handler {
+	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With"})
+	originsOk := handlers.AllowedOrigins([]string{os.Getenv("ORIGIN_ALLOWED")})
+	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
+	return handlers.CORS(originsOk, headersOk, methodsOk)(LoadRoutes())
+
 }

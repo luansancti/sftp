@@ -39,7 +39,7 @@ func test(rw http.ResponseWriter, req *http.Request) {
 
 func handleRequests() {
 	fmt.Println("Go Tutorial")
-	log.Fatal(http.ListenAndServe(":8081", routes.LoadRoutes()))
+	log.Fatal(http.ListenAndServe(":8081", routes.SetRequest()))
 	//log.Fatal(http.ListenAndServe(":8081", handlers.CORS(handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}), handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS"}), handlers.AllowedOrigins([]string{"*"}))(routes.LoadRoutes())))
 
 }

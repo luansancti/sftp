@@ -48,7 +48,7 @@ type DefaultResponse struct {
 	Message string
 }
 
-func ListDirectoryResponse(success bool, message string, data []string) DirectoryResponse {
+func ListDirectoryResponse(success bool, message string, data []DirectoryInfo) DirectoryResponse {
 	response := DirectoryResponse{}
 	response.Message = message
 	response.Success = success

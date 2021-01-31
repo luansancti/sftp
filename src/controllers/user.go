@@ -243,14 +243,13 @@ func ListFolder(rw http.ResponseWriter, req *http.Request) {
 	}
 	bodyString := string(bodyBytes)
 
-	// js, err := json.Marshal(commands.ListPath(bodyString))
-	// if err != nil {
-	// 	http.Error(rw, err.Error(), http.StatusInternalServerError)
-	// 	return
-	// }
+	s, err := json.Marshal(commands.ListPath(bodyString))
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
-	// rw.Write(js)
-	commands.ListDirectory(bodyString)
+	rw.Write(js)
 }
 
 func ListUsers(rw http.ResponseWriter, req *http.Request) {

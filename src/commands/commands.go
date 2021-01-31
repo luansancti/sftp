@@ -192,7 +192,7 @@ func ListDirectory(pathName string) models.DirectoryResponse {
 
 	fi, err := os.Stat(pathName)
 	if err != nil {
-		return models.ListDirectoryResponse(fmt.Sprint("Error list directory"), false, arrayFolder)
+		return models.ListDirectoryResponse(false, fmt.Sprint("Error list directory"), arrayFolder)
 		log.Fatal(err)
 	}
 	switch mode := fi.Mode(); {
@@ -223,7 +223,7 @@ func ListDirectory(pathName string) models.DirectoryResponse {
 		arrayFolder = append(arrayFolder, folder)
 
 	}
-	return models.ListDirectoryResponse(fmt.Sprint("Sucess list directory"), true, arrayFolder)
+	return models.ListDirectoryResponse(true, fmt.Sprint("Sucess list directory"), arrayFolder)
 }
 
 func DiskPercent() models.DirectoryPerc {

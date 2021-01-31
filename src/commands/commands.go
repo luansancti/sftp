@@ -211,14 +211,14 @@ func ListDirectory(pathName string) []models.DirectoryInfo {
 				folder.IsDirectory = false
 			}
 			folder.Size = f.Size()
-			folder.Name = pathName
+			folder.Name = f.Name()
 			folder.ModTime = f.ModTime()
 			arrayFolder = append(arrayFolder, folder)
 		}
 
 	case mode.IsRegular():
 		folder.Size = fi.Size()
-		folder.Name = pathName
+		folder.Name = fi.Name()
 		folder.ModTime = fi.ModTime()
 		arrayFolder = append(arrayFolder, folder)
 

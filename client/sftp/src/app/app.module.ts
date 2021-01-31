@@ -35,6 +35,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { ChangepassDialogComponent } from './shared/changepass-dialog/changepass-dialog.component';
 import { RenewDialogComponent } from './shared/renew-dialog/renew-dialog.component';
 import { RenewDialogService } from './shared/renew-dialog/renew-dialog.service';
+import { TableDirectoryComponent } from './table-directory/table-directory.component';
 
 
 
@@ -47,7 +48,8 @@ import { RenewDialogService } from './shared/renew-dialog/renew-dialog.service';
     ConfirmationDialogComponent,
     DashboardComponent,
     RenewDialogComponent,
-    ChangepassDialogComponent
+    ChangepassDialogComponent,
+    TableDirectoryComponent
   ],
   imports: [
     BrowserModule,

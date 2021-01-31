@@ -23,6 +23,12 @@ export class ResponseKey {
     Data: string;
 }
 
+export class ReponseListDirectory {
+    Success: boolean;
+    Message: string;
+    Data: ListDirectory[];
+}
+
 export class ResponseData {
     Success: string;
     Data: string[];
@@ -42,6 +48,12 @@ export class UserAdd {
 
 }
 
+export class ListDirectory {
+    Name: string;
+    Size: number;
+    IsDirectory: boolean;
+    ModTime: Date;
+}
 
 export class UserDetails {
     UserName: string;

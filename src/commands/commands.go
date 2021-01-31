@@ -181,11 +181,10 @@ func ListUsers() models.ListUser {
 			listUserDeta = append(listUserDeta, userDetails)
 		}
 	}
-	fmt.Println(listUserDeta)
 	return models.ResponseListUsers(fmt.Sprint("List update"), true, listUserDeta)
 }
 
-func ListDirectory(pathName string) []models.DirectoryInfo {
+func ListDirectory(pathName string) models.ListDirectoryResponse {
 
 	arrayFolder := []models.DirectoryInfo{}
 	folder := models.DirectoryInfo{}
@@ -193,6 +192,7 @@ func ListDirectory(pathName string) []models.DirectoryInfo {
 
 	fi, err := os.Stat(pathName)
 	if err != nil {
+		return models.ResponseListUsers(fmt.Sprint("Error list directory"), false, arrayFolder)
 		log.Fatal(err)
 	}
 	switch mode := fi.Mode(); {
@@ -223,8 +223,7 @@ func ListDirectory(pathName string) []models.DirectoryInfo {
 		arrayFolder = append(arrayFolder, folder)
 
 	}
-	fmt.Println(arrayFolder)
-	return arrayFolder
+	return models.ResponseListUsers(fmt.Sprint("Sucess list directory"), true, arrayFolder)
 }
 
 func DiskPercent() models.DirectoryPerc {

@@ -190,7 +190,6 @@ func ListDirectory(pathName string) []models.DirectoryInfo {
 	arrayFolder := []models.DirectoryInfo{}
 	folder := models.DirectoryInfo{}
 	pathName = filepath.Join(helper.GetConfigPaths().UsersPath, pathName)
-	
 
 	fi, err := os.Stat(pathName)
 	switch mode := fi.Mode(); {
@@ -199,7 +198,7 @@ func ListDirectory(pathName string) []models.DirectoryInfo {
 		if err != nil {
 			log.Fatal(err)
 		}
-	
+
 		for _, f := range files {
 			fmt.Println(f.Name())
 			switch mode := f.Mode(); {
@@ -208,9 +207,9 @@ func ListDirectory(pathName string) []models.DirectoryInfo {
 			case mode.IsRegular():
 				folder.IsDirectory = false
 			}
-			folder.Size = fi.Size()
+			folder.Size = f.Size()
 			folder.Name = pathName
-			folder.ModTime = fi.ModTime()
+			folder.ModTime = f.ModTime()
 			arrayFolder = append(arrayFolder, folder)
 		}
 
@@ -220,8 +219,9 @@ func ListDirectory(pathName string) []models.DirectoryInfo {
 		folder.ModTime = fi.ModTime()
 		arrayFolder = append(arrayFolder, folder)
 
-	fmt.Println(arrayFolder)
-	return arrayFolder
+		fmt.Println(arrayFolder)
+		return arrayFolder
+	}
 }
 
 func DiskPercent() models.DirectoryPerc {

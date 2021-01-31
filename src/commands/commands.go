@@ -189,6 +189,7 @@ func ListDirectory(pathName string) []models.DirectoryInfo {
 
 	arrayFolder := []models.DirectoryInfo{}
 	fmt.Println(helper.GetConfigPaths().UsersPath)
+	pathName = filepath.Join(helper.GetConfigPaths().UsersPath, pathName)
 	folder := models.DirectoryInfo{}
 
 	files, err := filepath.Glob(pathName)

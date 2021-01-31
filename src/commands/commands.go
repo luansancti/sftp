@@ -217,7 +217,7 @@ func ListDirectory(pathName string) []models.DirectoryInfo {
 		folder.ModTime = fi.ModTime()
 		arrayFolder = append(arrayFolder, folder)
 	}
-	fmt.Println(pathName)
+	fmt.Println(arrayFolder)
 	return arrayFolder
 }
 

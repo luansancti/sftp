@@ -192,6 +192,9 @@ func ListDirectory(pathName string) []models.DirectoryInfo {
 	pathName = filepath.Join(helper.GetConfigPaths().UsersPath, pathName)
 
 	fi, err := os.Stat(pathName)
+	if err != nil {
+		log.Fatal(err)
+	}
 	switch mode := fi.Mode(); {
 	case mode.IsDir():
 		files, err := ioutil.ReadDir(pathName)

@@ -31,7 +31,7 @@ type KeyResponse struct {
 	Data    string
 }
 
-type ListDirectoryResponse struct {
+type DirectoryResponse struct {
 	Success bool
 	Message string
 	Data    []DirectoryInfo
@@ -48,7 +48,7 @@ type DefaultResponse struct {
 	Message string
 }
 
-func ListDirectoryResponse(success bool, message string, data []string) ListDirectoryResponse {
+func ListDirectoryResponse(success bool, message string, data []string) DirectoryResponse {
 	response := ListDirectoryResponse{}
 	response.Message = message
 	response.Success = success

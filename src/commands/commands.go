@@ -188,35 +188,38 @@ func ListUsers() models.ListUser {
 func ListDirectory(pathName string) []models.DirectoryInfo {
 
 	arrayFolder := []models.DirectoryInfo{}
-
-	pathName = filepath.Join(helper.GetConfigPaths().UsersPath, pathName)
 	folder := models.DirectoryInfo{}
+	pathName = filepath.Join(helper.GetConfigPaths().UsersPath, pathName)
+	
 
-	fmt.Println(pathName)
-	files, err := filepath.Glob(pathName)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	for _, s := range files {
-		fi, err := os.Stat(s)
+	fi, err := os.Stat(pathName)
+	switch mode := fi.Mode(); {
+	case mode.IsDir():
+		files, err := ioutil.ReadDir(pathName)
 		if err != nil {
-			fmt.Println(err)
-			return arrayFolder
+			log.Fatal(err)
 		}
-		switch mode := fi.Mode(); {
-		case mode.IsDir():
-			folder.IsDirectory = true
-		case mode.IsRegular():
-			folder.IsDirectory = false
+	
+		for _, f := range files {
+			fmt.Println(f.Name())
+			switch mode := f.Mode(); {
+			case mode.IsDir():
+				folder.IsDirectory = true
+			case mode.IsRegular():
+				folder.IsDirectory = false
+			}
+			folder.Size = fi.Size()
+			folder.Name = pathName
+			folder.ModTime = fi.ModTime()
+			arrayFolder = append(arrayFolder, folder)
 		}
-		//stat, _ := os.Lstat(s)
-		//folder.Size = helper.SizedDisk(pathName, stat)
+
+	case mode.IsRegular():
 		folder.Size = fi.Size()
 		folder.Name = pathName
 		folder.ModTime = fi.ModTime()
 		arrayFolder = append(arrayFolder, folder)
-	}
+
 	fmt.Println(arrayFolder)
 	return arrayFolder
 }

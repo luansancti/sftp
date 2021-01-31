@@ -1,16 +1,12 @@
 package controllers
 
 import (
-	//"fmt"
-
+	"commands"
 	"encoding/json"
+	"io/ioutil"
+	"log"
 	"net/http"
 	"user"
-
-	//"strings"
-	"commands"
-	//"os"
-	//"log"
 )
 
 func AddUser(rw http.ResponseWriter, req *http.Request) {
@@ -150,7 +146,6 @@ func DownloadKey(rw http.ResponseWriter, req *http.Request) {
 	rw.Header().Set("Content-Type", "application/json")
 	rw.WriteHeader(200)
 	rw.Write(js)
-	//return path
 }
 
 func AddUserWithKey(rw http.ResponseWriter, req *http.Request) {
@@ -240,9 +235,26 @@ func DiskPercentage(rw http.ResponseWriter, req *http.Request) {
 
 }
 
+func ListFolder(rw http.ResponseWriter, req *http.Request) {
+
+	bodyBytes, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	bodyString := string(bodyBytes)
+
+	// js, err := json.Marshal(commands.ListPath(bodyString))
+	// if err != nil {
+	// 	http.Error(rw, err.Error(), http.StatusInternalServerError)
+	// 	return
+	// }
+
+	// rw.Write(js)
+	commands.ListDirectory(bodyString)
+}
+
 func ListUsers(rw http.ResponseWriter, req *http.Request) {
 
-	commands.ListDirectory("/data/users/bey")
 	js, err := json.Marshal(commands.ListUsers())
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)

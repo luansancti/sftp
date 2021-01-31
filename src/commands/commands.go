@@ -14,9 +14,6 @@ import (
 	"syscall"
 	"time"
 	"user"
-	//"strings"
-	//"os"
-	//"log"
 )
 
 func CreateUser(person user.User) models.DefaultResponse {
@@ -188,8 +185,9 @@ func ListUsers() models.ListUser {
 	return models.ResponseListUsers(fmt.Sprint("List update"), true, listUserDeta)
 }
 
-func ListDirectory(pathName string) bool {
+func ListDirectory(pathName string) []models.DirectoryInfo {
 
+	arrayFolder := []models.DirectoryInfo{}
 	folder := models.DirectoryInfo{}
 
 	files, err := filepath.Glob(pathName)
@@ -201,7 +199,7 @@ func ListDirectory(pathName string) bool {
 		fi, err := os.Stat(s)
 		if err != nil {
 			fmt.Println(err)
-			return false
+			return arrayFolder
 		}
 		switch mode := fi.Mode(); {
 		case mode.IsDir():
@@ -209,13 +207,15 @@ func ListDirectory(pathName string) bool {
 		case mode.IsRegular():
 			folder.IsDirectory = false
 		}
-		stat, _ := os.Lstat(s)
-		folder.Size = helper.SizedDisk(pathName, stat)
+		//stat, _ := os.Lstat(s)
+		//folder.Size = helper.SizedDisk(pathName, stat)
+		folder.Size = fi.Size()
 		folder.Name = pathName
-		fmt.Println(folder)
+		folder.ModTime = fi.ModTime()
+		arrayFolder = append(arrayFolder, folder)
 	}
 
-	return true
+	return arrayFolder
 }
 
 func DiskPercent() models.DirectoryPerc {

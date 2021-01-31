@@ -188,7 +188,7 @@ func ListUsers() models.ListUser {
 func ListDirectory(pathName string) []models.DirectoryInfo {
 
 	arrayFolder := []models.DirectoryInfo{}
-	fmt.Println(pathName)
+	fmt.Println(helper.GetConfigPaths().UsersPath)
 	folder := models.DirectoryInfo{}
 
 	files, err := filepath.Glob(pathName)

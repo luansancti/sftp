@@ -49,7 +49,7 @@ type DefaultResponse struct {
 }
 
 func ListDirectoryResponse(success bool, message string, data []string) DirectoryResponse {
-	response := ListDirectoryResponse{}
+	response := DirectoryResponse{}
 	response.Message = message
 	response.Success = success
 	response.Data = data

@@ -243,7 +243,7 @@ func ListFolder(rw http.ResponseWriter, req *http.Request) {
 	}
 	bodyString := string(bodyBytes)
 
-	s, err := json.Marshal(commands.ListPath(bodyString))
+	js, err := json.Marshal(commands.ListPath(bodyString))
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 		return

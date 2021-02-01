@@ -17,6 +17,11 @@ export class Helper {
     
         return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
     }
+    public pathJoin(parts, sep){
+        var separator = sep || '/';
+        var replace   = new RegExp(separator+'{1,}', 'g');
+        return parts.join(separator).replace(replace, separator);
+     }
 
     public generatePassword(length, addUpper, addSymbols, addNums) {
         var lower = "abcdefghijklmnopqrstuvwxyz";

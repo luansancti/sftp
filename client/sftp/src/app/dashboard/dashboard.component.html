@@ -5,11 +5,9 @@
         <mat-panel-title>
             Dashboard
         </mat-panel-title>
-        <mat-panel-description>
-            Click to open painel
-        </mat-panel-description>
         </mat-expansion-panel-header>
        
+        <app-disk-percentage></app-disk-percentage>
             <div class="table-responsive">
                 <table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort class="mat-elevation-z8">
                     <ng-container matColumnDef="UserName">
@@ -31,6 +29,6 @@
                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
             </div>
         
-        <app-disk-percentage></app-disk-percentage>
+        
     </mat-expansion-panel>
 </mat-accordion>        

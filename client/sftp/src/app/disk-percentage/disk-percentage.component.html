@@ -1,5 +1,5 @@
 <mat-accordion>
-    <mat-expansion-panel (opened)="panelOpenState = true"
+    <!-- <mat-expansion-panel (opened)="panelOpenState = true"
                             (closed)="panelOpenState = false">
         <mat-expansion-panel-header>
         <mat-panel-title>
@@ -8,24 +8,31 @@
         <mat-panel-description>
             
         </mat-panel-description>
-        </mat-expansion-panel-header>
-        <div class="container">
-           
+        </mat-expansion-panel-header> -->
+        <div class="container">   
             <div class="row" >
                 <div class="col-lg" *ngFor="let x of data">
                     <div>
-                        <mat-progress-spinner
+                        <p>{{x.DirectoryName.split('/')[2] | uppercase}}</p> 
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: {{x.Percentage}}%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                <span>{{x.Percentage}}% Complete</span>
+                            </div>
+                            
+                        </div>
+                        <!-- <mat-progress-spinner
                             class="example-margin"
                             [color]="color"
                             [mode]="mode"
                             [value]="x.Percentage"
                             aria-label="Rating">
                         </mat-progress-spinner>
-                        <div style="position:relative; top: -60px; left: 30px;">{{x.DirectoryName.split('/')[2] | uppercase}}<br>{{x.Percentage | number:'1.0-0'}}%</div>
+                        <div style="position:relative; top: -60px; left: 30px;">{{x.DirectoryName.split('/')[2] | uppercase}}<br>{{x.Percentage | number:'1.0-0'}}%</div> -->
                     </div>
                 </div>
             </div>
         </div>
         
-    </mat-expansion-panel>
+        
+    <!-- </mat-expansion-panel> -->
 </mat-accordion>        

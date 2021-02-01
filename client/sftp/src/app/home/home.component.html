@@ -1,12 +1,12 @@
 
 <div class="container-header container-md">
     <div class="row justify-content-center">
-        <div class="dashboard col-md-6">
+        <div class="dashboard col-md-12">
             <app-dashboard></app-dashboard>
         </div>
-        <div class="add-user col-md-6">
+        <!-- <div class="add-user col-md-6">
             <app-add-user (notifyParent)="getNotification()"></app-add-user>
-        </div>
+        </div> -->
     </div>
 </div>
     
@@ -50,7 +50,7 @@
                                 <a href="#" class="list-group-item list-group-item-action"
                                     *ngIf="element.Expiration != 'Never'" (click)="renewUser(element)">Renew user</a>
                                 <a href="#" (click)="deleteUser(element)"class="list-group-item list-group-item-action danger">Delete user</a>
-                                <a href="#" class="list-group-item list-group-item-action">Open directory</a>
+                                <a href="/userdirectory" class="list-group-item list-group-item-action">Open directory</a>
                                 <br>
                             </div>
                         </div>
